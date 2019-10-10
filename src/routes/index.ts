@@ -1,6 +1,14 @@
-import { Router, Request, Response } from 'express'
+import { Router } from 'express'
+import SitesControllers from '../controllers/index'
+
 const router = Router()
-router.get('/', (req: Request, res: Response) => {
-    res.send('Testing...')
-})
+
+const sitesControllers = new SitesControllers()
+
+router.route('/')
+    .get(sitesControllers.getSites)
+    .post(sitesControllers.createSite)
+    .put(sitesControllers.updateSite)
+    .delete(sitesControllers.deleteSite)
+
 export default router

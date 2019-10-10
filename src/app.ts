@@ -14,6 +14,7 @@ export default class Application {
     }
     middelwares() {
         this.app.use(morgan('dev'))
+        this.app.use(express.json())
     }
     routes() {
         this.app.use(routes)

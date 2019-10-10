@@ -10,5 +10,6 @@ router.route('/')
     .post(sitesControllers.createSite)
     .put(sitesControllers.updateSite)
     .delete(sitesControllers.deleteSite)
+router.get('/:id', sitesControllers.getSite)
 
 export default router

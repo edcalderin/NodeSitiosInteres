@@ -13,11 +13,11 @@ export default class Application {
         this.app.set('port', process.env.PORT || 3000)
     }
     middelwares() {
-        this.app.use(morgan('dev'))
-        this.app.use(express.json())
+        this.app.use(morgan('dev')) //Informacion de cada solicitud: Tiempo, tipo de respuesta...
+        this.app.use(express.json()) //Para entender las respuestas JSON del cliente
     }
     routes() {
-        this.app.use(routes)
+        this.app.use('/api/sites',routes)
     }
     start() {
         const port = this.app.get('port')

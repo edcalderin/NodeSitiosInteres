@@ -1,7 +1,9 @@
-import authFirebase from '../firebase/auth'
+import firebase_client from '../controllers/firebase_client'
 import { Router } from 'express'
 
 const router = Router()
-const auth = new authFirebase()
-router.post('/', auth.signIn)
+const Firebase_client = new firebase_client()
+
+router.post('/', Firebase_client.signIn)
+
 export default router

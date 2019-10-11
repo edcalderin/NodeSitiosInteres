@@ -1,6 +1,4 @@
-import firebase from 'firebase'
-
-const config = {
+export const config = {
     "apiKey": "AIzaSyCr67wg6lFCNMoUkyaS2GvvKcO9QAhCYqE",
     "authDomain": "nodechallenge-424c1.firebaseapp.com",
     "databaseURL": "https://nodechallenge-424c1.firebaseio.com",
@@ -9,5 +7,3 @@ const config = {
     "messagingSenderId": "198380806724",
     "appId": "1:198380806724:web:40d57506473d3f31f39211"
 }
-firebase.initializeApp(config)
-export default firebase

@@ -1,9 +1,11 @@
 import { Router } from 'express'
-import SitesControllers from '../controllers/index'
+import SitesControllers from '../controllers/SitesController'
+import AuthFirebase from '../controllers/firebase/middelwares'
 
 const router = Router()
 
 const sitesControllers = new SitesControllers()
+const authFirebase = new AuthFirebase()
 
 router.route('/')
     .get(sitesControllers.getSites)

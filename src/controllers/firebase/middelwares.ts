@@ -11,7 +11,7 @@ export default class Auth {
             req.body.decodedToken = decodedToken
             next()
         } catch (error) {
-            res.status(404).send('No autorizado 1')
+            res.status(404).send('No autorizado')
         }
     }
 
@@ -23,7 +23,7 @@ export default class Auth {
             next()
         }
         else
-            res.status(404).send('No autorizao 2')
+            res.status(404).send('No autorizado')
     }
 
 }

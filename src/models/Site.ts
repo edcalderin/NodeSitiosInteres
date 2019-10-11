@@ -1,5 +1,6 @@
 export interface Site {
     id: number,
-    name: string,
-
+    nombre: string,
+    descripcion: string,
+    url_imagen: string,
 }

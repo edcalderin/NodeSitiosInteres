@@ -1,22 +1,21 @@
 import { Request, Response } from 'express'
 import { Site } from '../models/site'
-import { firebase, admin } from './firebase/initialize'
-export default class SitesController {   
+import { firebase } from './firebase/initialize'
 
-    getSites(req: Request, res: Response) {
-        const { uid } = req.body
-        console.log('uid', uid)
-        admin.auth().getUser(uid).then(r=>{
-            res.json(r)
+export default class SitesController {
 
-        })
-        .catch(e=>console.log('error'))
-       /*  admin.database().ref('SitiosInteres/' + uid).once('value')
-            .then(snapshot => {
-                res.send(snapshot)
+    async getSites(req: Request, res: Response) {
+        var fs = firebase.firestore()
+        fs.collection('SitiosInteres').get().then(collection => {
+            var sites = Array<Site>()
+            collection.forEach(e => {
+                sites.push(e.data() as Site)
             })
-            .catch(error => res.status(404).json({ 'Error': error })) */
+            res.json(sites)
+        })
+            .catch(e => res.status(404).send({ 'error': e }))
     }
+
     getSite(req: Request, res: Response) {
 
 

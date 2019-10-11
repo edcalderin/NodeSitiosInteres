@@ -7,6 +7,7 @@ const sitesControllers = new SitesControllers()
 
 router.route('/')
     .get(sitesControllers.getSites)
+    .get(sitesControllers.getSites)
     .post(sitesControllers.createSite)
     .put(sitesControllers.updateSite)
     .delete(sitesControllers.deleteSite)

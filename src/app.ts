@@ -14,7 +14,7 @@ export default class Application {
         this.routes()
     }
     settings() {
-        this.app.set('port', process.env.PORT || 3000)
+        this.app.set('port', process.env.PORT || 3000) //Puerto estatico o asignado por sistema operativo
     }
     middelwares() {
         this.app.use(morgan('dev')) //Informacion de cada solicitud: Tiempo, tipo de respuesta...
@@ -23,8 +23,8 @@ export default class Application {
     routes() {
         this.app.use('/api/auth/', routesAuth)
         this.app.use('/api/sites', this.authFirebase.decodeToken, this.authFirebase.isAuthorized, routes)
-    }
-    start() {
+    }  
+    start() {      
         const port = this.app.get('port')
         this.app.listen(port, () => {
             console.log(`Server running ${port}`)

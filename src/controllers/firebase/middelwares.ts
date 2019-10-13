@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { admin, firebase } from './initialize'
+import { admin } from './initialize'
 
 export default class Auth {
     async decodeToken(req: Request, res: Response, next: NextFunction) {

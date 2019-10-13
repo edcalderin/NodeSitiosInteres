@@ -5,14 +5,12 @@ const router = Router()
 const sitesControllers = new SitesControllers()
 
 router.route('/')
-    .get(sitesControllers.getSites)
+    .get(sitesControllers.getSites.bind(sitesControllers))
     .post(sitesControllers.createSite)
     .put(sitesControllers.updateSite)
 
-router.route('/:id([0-9])') //Expresion regular para distinguir el parametro id, caracteres de 0 a 9
+router.route('/:id')
     .get(sitesControllers.getSiteById)
     .delete(sitesControllers.deleteSite)
-
-router.get('/:name', sitesControllers.getSiteByName) //Si no hay expresion regular el parametro es el nombre.
 
 export default router

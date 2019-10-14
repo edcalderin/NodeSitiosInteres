@@ -1,7 +1,9 @@
 import { Request, Response } from 'express'
+import { validationResult } from 'express-validator'
 import { Site } from '../models/site'
 import { firebase } from './firebase/initialize'
 import { firestore } from 'firebase'
+
 const collection_name = "SitiosInteres"
 const Not_Found = "Sitio no encontrado"
 
@@ -19,44 +21,27 @@ export default class SitesController {
             .startAfter(Number(lastId))
             .limit(limit)
     }
-    private async getAllSitesWithPagination(lastId: number, limit: number) {
+    private async getAllSitesWithPagination(limit: number, lastId: number) {
         try {
-            var sites = Array<any>()
             const ref = firebase.firestore()
             const collection = await this.getQueryPagination(ref, lastId, limit).get()
-            collection.forEach(e => {
-                sites.push({
-                    sites: {
-                        id: e.data().id,
-                        nombre: e.data().nombre
-                    },
-                })
-            })
             var sitesFull = {
-                sites: sites,
+                sites: this.fillSite(collection),
                 lastId: collection.docs[collection.docs.length - 1].data().id
             }
             return sitesFull
         } catch (error) {
-            return []
+            return error
         }
     }
     private async getSitesByName(nombre: string) {
         try {
-            var sites = Array<any>()
             const ref = firebase.firestore()
             const collection = await ref.collection(collection_name).where('nombre', '==', nombre).get()
-            collection.forEach(e => {
-                sites.push({
-                    sites: {
-                        id: e.data().id,
-                        nombre: e.data().nombre
-                    },
-                })
-            })
+            var sites = this.fillSite(collection)
             return sites
         } catch (error) {
-            return []
+            return error
         }
     }
 
@@ -68,7 +53,7 @@ export default class SitesController {
                 res.json(sitesName)
             }
             else {
-                var sitesPage = await this.getAllSitesWithPagination(Number(lastId), Number(limit))
+                var sitesPage = await this.getAllSitesWithPagination(Number(limit), Number(lastId))
                 res.json(sitesPage)
             }
         } catch (error) {
@@ -101,24 +86,27 @@ export default class SitesController {
         }
     }
     public async updateSite(req: Request, res: Response) {
-        const { site } = req.body
-        var newSite: Site = site
+        var newSite: Site = this.parseSite(req.body)
         var ref = firebase.firestore()
         try {
             const sites = await ref.collection(collection_name).where('id', '==', newSite.id).get()
             if (sites.empty)
                 return res.status(404).send(Not_Found)
             await sites.docs[0].ref.update(newSite)
-            return res.json(site)
+            return res.json(newSite)
         } catch (error) {
             res.status(404).json({ 'Error': error })
         }
     }
+
     public async createSite(req: Request, res: Response) {
-        const { site } = req.body
-        var newSite: Site = site
-        const ref = firebase.firestore()
         try {
+            const errors = validationResult(req)
+            if (!errors.isEmpty())
+                return res.status(404).json({ 'Errores': errors.array() })
+
+            var newSite: Site = this.parseSite(req.body)
+            const ref = firebase.firestore()
             const sites = await ref.collection(collection_name).where('id', '==', newSite.id).get()
             if (!sites.empty)
                 return res.status(404).send(`El sitio con id ${newSite.id} ya existe`)
@@ -127,5 +115,24 @@ export default class SitesController {
         } catch (error) {
             res.status(404).json({ 'Error': error })
         }
+    }
+    parseSite(body: any): Site {
+        return <Site>{
+            id: Number(body.id),
+            nombre: body.nombre,
+            descripcion: body.descripcion,
+            url_imagen: body.url_imagen,
+            ubicacion: body.ubicacion
+        }
+    }
+    fillSite(collection: firestore.QuerySnapshot) {
+        var _sites = Array<any>()
+        collection.forEach(e => {
+            _sites.push({
+                id: e.data().id,
+                nombre: e.data().nombre
+            })
+        })
+        return _sites
     }
 }

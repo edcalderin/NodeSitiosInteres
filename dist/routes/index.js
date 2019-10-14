@@ -4,13 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const index_1 = __importDefault(require("../controllers/index"));
+const SitesController_1 = __importDefault(require("../controllers/SitesController"));
+const validator_1 = require("../validator");
 const router = express_1.Router();
-const sitesControllers = new index_1.default();
+const sitesControllers = new SitesController_1.default();
 router.route('/')
-    .get(sitesControllers.getSites)
-    .post(sitesControllers.createSite)
-    .put(sitesControllers.updateSite)
+    .get(sitesControllers.getSites.bind(sitesControllers))
+    .post(validator_1.checkSiteBody(), sitesControllers.createSite.bind(sitesControllers))
+    .put(validator_1.checkSiteBody(), sitesControllers.updateSite.bind(sitesControllers));
+router.route('/:id')
+    .get(sitesControllers.getSiteById)
     .delete(sitesControllers.deleteSite);
-router.get('/:id', sitesControllers.getSite);
 exports.default = router;

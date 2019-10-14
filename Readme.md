@@ -82,6 +82,8 @@ NOTAS ADICIONALES
 
 - Se logró modularizar tanto como se pudo.
 - Se puede mejorar al agregar un middelware para la validación de sitios con id existentes y reducir la cantidad de lineas de código en el controlador, actualmente se valida en cada solicitud que corresponde. 
+- Escritura de código con Typescript por comodidad.
+- Ejecutar con "npm start"
 
 
 

@@ -61,15 +61,15 @@ class SitesController {
             try {
                 if (nombre) { //Filtro por nombre
                     var sitesName = yield this.getSitesByName(nombre);
-                    res.json(sitesName);
+                    return res.json(sitesName);
                 }
                 else {
                     var sitesPage = yield this.getAllSitesWithPagination(Number(limit), Number(lastId));
-                    res.json(sitesPage);
+                    return res.json(sitesPage);
                 }
             }
             catch (error) {
-                res.status(404).json({ 'Error': error });
+                return res.status(404).json({ 'Error': error });
             }
         });
     }
@@ -84,7 +84,7 @@ class SitesController {
                 return res.json(sites.docs[0].data());
             }
             catch (error) {
-                res.status(404).json({ 'Error': error });
+                return res.status(404).json({ 'Error': error });
             }
         });
     }
@@ -100,7 +100,7 @@ class SitesController {
                 return res.json(sites.docs[0].data());
             }
             catch (error) {
-                res.status(404).json({ 'Error': error });
+                return res.status(404).json({ 'Error': error });
             }
         });
     }
@@ -116,7 +116,7 @@ class SitesController {
                 return res.json(newSite);
             }
             catch (error) {
-                res.status(404).json({ 'Error': error });
+                return res.status(404).json({ 'Error': error });
             }
         });
     }
@@ -132,10 +132,10 @@ class SitesController {
                 if (!sites.empty)
                     return res.status(404).send(`El sitio con id ${newSite.id} ya existe`);
                 yield ref.collection(collection_name).add(newSite);
-                return res.json(newSite);
+                return res.status(200).json(newSite);
             }
             catch (error) {
-                res.status(404).json({ 'Error': error });
+                return res.status(404).json({ 'Error': error });
             }
         });
     }

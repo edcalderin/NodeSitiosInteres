@@ -45,22 +45,22 @@ export default class SitesController {
         }
     }
 
-    public async getSites(req: Request, res: Response) {
+    public async getSites(req: Request, res: Response):Promise<Response> {
         const { nombre, lastId, limit } = req.query
         try {
             if (nombre) { //Filtro por nombre
                 var sitesName = await this.getSitesByName(nombre)
-                res.json(sitesName)
+                return res.json(sitesName)
             }
             else {
                 var sitesPage = await this.getAllSitesWithPagination(Number(limit), Number(lastId))
-                res.json(sitesPage)
+                return res.json(sitesPage)
             }
         } catch (error) {
-            res.status(404).json({ 'Error': error })
+            return res.status(404).json({ 'Error': error })
         }
     }
-    public async getSiteById(req: Request, res: Response) {
+    public async getSiteById(req: Request, res: Response):Promise<Response> {
         const { id } = req.params
         var ref = firebase.firestore()
         try {
@@ -69,10 +69,10 @@ export default class SitesController {
                 return res.status(404).send(Not_Found)
             return res.json(sites.docs[0].data())
         } catch (error) {
-            res.status(404).json({ 'Error': error })
+            return res.status(404).json({ 'Error': error })
         }
     }
-    public async deleteSite(req: Request, res: Response) {
+    public async deleteSite(req: Request, res: Response):Promise<Response> {
         const { id } = req.params
         var ref = firebase.firestore()
         try {
@@ -82,10 +82,10 @@ export default class SitesController {
             await sites.docs[0].ref.delete()
             return res.json(sites.docs[0].data())
         } catch (error) {
-            res.status(404).json({ 'Error': error })
+            return res.status(404).json({ 'Error': error })
         }
     }
-    public async updateSite(req: Request, res: Response) {
+    public async updateSite(req: Request, res: Response):Promise<Response> {
         var newSite: Site = this.parseSite(req.body)
         var ref = firebase.firestore()
         try {
@@ -95,11 +95,11 @@ export default class SitesController {
             await sites.docs[0].ref.update(newSite)
             return res.json(newSite)
         } catch (error) {
-            res.status(404).json({ 'Error': error })
+            return res.status(404).json({ 'Error': error })
         }
     }
 
-    public async createSite(req: Request, res: Response) {
+    public async createSite(req: Request, res: Response):Promise<Response> {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty())
@@ -111,9 +111,9 @@ export default class SitesController {
             if (!sites.empty)
                 return res.status(404).send(`El sitio con id ${newSite.id} ya existe`)
             await ref.collection(collection_name).add(newSite)
-            return res.json(newSite)
+            return res.status(200).json(newSite)
         } catch (error) {
-            res.status(404).json({ 'Error': error })
+            return res.status(404).json({ 'Error': error })
         }
     }
     parseSite(body: any): Site {
